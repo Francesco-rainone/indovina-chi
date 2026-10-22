@@ -1,0 +1,263 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #FF6E6E;
+  --primary-foreground: #ffffff;
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: #FF6E6E;
+  --primary-foreground: #ffffff;
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ============================================================
+   INDOVINA CHI — game theme tokens
+   ============================================================ */
+:root {
+  /* Player colors (card backgrounds per-player) */
+  --color-p1: #FF6E6E;            /* host / Giocatore 1 */
+  --color-p1-ink: #5a1414;        /* readable ink on P1 color */
+  --color-p2: #6ED8FF;            /* guest / Giocatore 2 */
+  --color-p2-ink: #0a3a4a;        /* readable ink on P2 color */
+
+  /* Hard retro drop-shadow color (matches the Figma card shadow) */
+  --card-hard-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.28);
+
+  /* Hearts/lives color (rusty red-brown from the Figma) */
+  --color-lives: #b4402a;
+
+  /* Background image for the game shell */
+  --game-bg-image: url('/sfondo.webp');
+}
+
+/* Utility: card with the "Figma look" — thick white border + hard drop shadow.
+   Plain CSS (NOT in @layer utilities) so Tailwind v4 doesn't tree-shake them. */
+.figma-card {
+  border: 3px solid #ffffff;
+  box-shadow: var(--card-hard-shadow);
+  border-radius: 8px;
+}
+.figma-card-tight {
+  border: 2px solid #ffffff;
+  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.28);
+  border-radius: 6px;
+}
+.card-excluded {
+  filter: brightness(0.42) saturate(0.5) contrast(0.95);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.55) inset, 4px 4px 0 0 rgba(0, 0, 0, 0.55);
+}
+.game-shell-bg {
+  background-image: var(--game-bg-image);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* "Guess Who" logo style (Luckiest Guy):
+   - Letter body: vivid red #D32F2F
+   - 3D highlight: lighter red/orange #FF5252 (top, for the "plastic" bulge)
+   - Inner outline: pure white #FFFFFF (~3px)
+   - Outer outline / box: deep blue #2A3B8F
+   - Hard 3D drop shadow
+*/
+.guess-name {
+  font-family: var(--font-luckiest), 'Luckiest Guy', system-ui, sans-serif;
+  color: #D32F2F;                       /* letter body — vivid red */
+  -webkit-text-stroke: 3px #FFFFFF;     /* inner white outline */
+  paint-order: stroke fill;
+  text-shadow:
+    /* top highlight (plastic 3D bulge, lighter red/orange) */
+    0 -1px 0 #FF5252,
+    /* INNER blue outline (sits just outside the white stroke) — 8 directions at 1px */
+    -1px 0 0 #2A3B8F, 1px 0 0 #2A3B8F,
+    0 -1px 0 #2A3B8F, 0 1px 0 #2A3B8F,
+    -0.7px -0.7px 0 #2A3B8F, 0.7px -0.7px 0 #2A3B8F,
+    -0.7px 0.7px 0 #2A3B8F, 0.7px 0.7px 0 #2A3B8F,
+    /* OUTER blue outline (further out) — 8 directions at 3px */
+    -3px 0 0 #2A3B8F, 3px 0 0 #2A3B8F,
+    0 -3px 0 #2A3B8F, 0 3px 0 #2A3B8F,
+    -2.2px -2.2px 0 #2A3B8F, 2.2px -2.2px 0 #2A3B8F,
+    -2.2px 2.2px 0 #2A3B8F, 2.2px 2.2px 0 #2A3B8F,
+    /* hard 3D drop shadow */
+    5px 5px 0 rgba(0, 0, 0, 0.55);
+  letter-spacing: -1px;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+.guess-name-sm {
+  -webkit-text-stroke-width: 2px;
+  text-shadow:
+    0 -1px 0 #FF5252,
+    /* inner blue ring at 1px */
+    -1px 0 0 #2A3B8F, 1px 0 0 #2A3B8F, 0 -1px 0 #2A3B8F, 0 1px 0 #2A3B8F,
+    -0.7px -0.7px 0 #2A3B8F, 0.7px -0.7px 0 #2A3B8F, -0.7px 0.7px 0 #2A3B8F, 0.7px 0.7px 0 #2A3B8F,
+    /* outer blue ring at 2.5px */
+    -2.5px 0 0 #2A3B8F, 2.5px 0 0 #2A3B8F, 0 -2.5px 0 #2A3B8F, 0 2.5px 0 #2A3B8F,
+    -1.8px -1.8px 0 #2A3B8F, 1.8px -1.8px 0 #2A3B8F, -1.8px 1.8px 0 #2A3B8F, 1.8px 1.8px 0 #2A3B8F,
+    4px 4px 0 rgba(0,0,0,0.5);
+}
+.guess-name-lg {
+  -webkit-text-stroke-width: 4px;
+  text-shadow:
+    0 -2px 0 #FF5252,
+    /* BLUE outline — 16 directions at 5.5px for a thick, continuous ring just outside the white inner stroke */
+    -5.5px 0 0 #2A3B8F, 5.5px 0 0 #2A3B8F, 0 -5.5px 0 #2A3B8F, 0 5.5px 0 #2A3B8F,
+    -3.9px -3.9px 0 #2A3B8F, 3.9px -3.9px 0 #2A3B8F, -3.9px 3.9px 0 #2A3B8F, 3.9px 3.9px 0 #2A3B8F,
+    -2.1px -5.1px 0 #2A3B8F, 2.1px -5.1px 0 #2A3B8F, -2.1px 5.1px 0 #2A3B8F, 2.1px 5.1px 0 #2A3B8F,
+    -5.1px -2.1px 0 #2A3B8F, 5.1px -2.1px 0 #2A3B8F, -5.1px 2.1px 0 #2A3B8F, 5.1px 2.1px 0 #2A3B8F,
+    /* hard 3D drop shadow */
+    6px 6px 0 rgba(0,0,0,0.6);
+}
+/* Tilted variant — player-name badge straddles the board border, tilted -3° */
+.guess-name-tilt-l {
+  display: inline-block;
+  transform: rotate(-3deg);
+}
+.guess-name-tilt-r {
+  display: inline-block;
+  transform: rotate(2deg);
+}
+/* Two-line brand title: INDOVINA (tilt -3°) + CHI? (tilt +2°, slightly larger) */
+.guess-name-title {
+  font-family: var(--font-luckiest), 'Luckiest Guy', system-ui, sans-serif;
+  text-align: center;
+  line-height: 0.9;
+}
+.guess-name-title .ln1, .guess-name-title .ln2 {
+  font-family: var(--font-luckiest), 'Luckiest Guy', system-ui, sans-serif;
+  color: #D32F2F;
+  -webkit-text-stroke: 3px #FFFFFF;
+  paint-order: stroke fill;
+  text-shadow:
+    0 -2px 0 #FF5252,
+    /* BLUE outline — 16 directions at 5.5px (same ring as .guess-name-lg) */
+    -5.5px 0 0 #2A3B8F, 5.5px 0 0 #2A3B8F, 0 -5.5px 0 #2A3B8F, 0 5.5px 0 #2A3B8F,
+    -3.9px -3.9px 0 #2A3B8F, 3.9px -3.9px 0 #2A3B8F, -3.9px 3.9px 0 #2A3B8F, 3.9px 3.9px 0 #2A3B8F,
+    -2.1px -5.1px 0 #2A3B8F, 2.1px -5.1px 0 #2A3B8F, -2.1px 5.1px 0 #2A3B8F, 2.1px 5.1px 0 #2A3B8F,
+    -5.1px -2.1px 0 #2A3B8F, 5.1px -2.1px 0 #2A3B8F, -5.1px 2.1px 0 #2A3B8F, 5.1px 2.1px 0 #2A3B8F,
+    6px 6px 0 rgba(0,0,0,0.55);
+  letter-spacing: -1px;
+  text-transform: uppercase;
+}
+.guess-name-title .ln1 {
+  display: inline-block;
+  transform: rotate(-3deg);
+  margin-right: 4.5px;
+}
+.guess-name-title .ln2 {
+  display: inline-block;
+  transform: rotate(2deg);
+  font-size: 1.15em;
+  margin-left: 4.5px;
+}

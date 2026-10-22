@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS "Board" (
+  "id" TEXT NOT NULL PRIMARY KEY,
+  "name" TEXT NOT NULL,
+  "characters" TEXT NOT NULL,
+  "charCount" INTEGER NOT NULL,
+  "creatorName" TEXT,
+  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,0 +1,23 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Saved boards for "Indovina Chi": reusable character sets created from uploaded images.
+// characters is a JSON-stringified array of { id, name, image (base64 data URL) }
+// because SQLite (via Prisma) does not support native lists/JSON columns.
+model Board {
+  id          String   @id @default(cuid())
+  name        String
+  characters  String
+  charCount   Int
+  creatorName String?
+  createdAt   DateTime @default(now())
+}
