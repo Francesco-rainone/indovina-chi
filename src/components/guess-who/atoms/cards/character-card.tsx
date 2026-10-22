@@ -36,9 +36,7 @@ interface CharacterCardProps {
   pickHint?: boolean
   /** show a "right-click / long-press to guess" hint overlay (when it's your turn and the card is guessable) */
   guessable?: boolean
-  /** when true, the card completes a full turn and returns face-up */
-  flipReveal?: boolean
-  /** turn the card face-down and show the player's colored card back */
+  /** when true, the card flips face-down showing the player's colored card back */
   faceDown?: boolean
 }
 
@@ -66,13 +64,13 @@ export const CharacterCard = ({
   onGuess,
   pickHint = false,
   guessable = false,
-  flipReveal = false,
   faceDown = false,
 }: CharacterCardProps) => {
   const s = sizeMap[size]
   const colorVar = playerColor === 'p1' ? 'var(--color-p1)' : 'var(--color-p2)'
   const inkVar = playerColor === 'p1' ? 'var(--color-p1-ink)' : 'var(--color-p2-ink)'
   const backImage = playerColor === 'p1' ? '/red-retrocard.jpg' : '/blu-retrocard.jpg'
+  const innerRadius = size === 'lg' ? 7 : 5
 
   // ---- Mobile long-press detection (alternative to right-click on touch devices) ----
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -153,7 +151,7 @@ export const CharacterCard = ({
         disabled ? 'cursor-default' : 'cursor-pointer active:translate-y-[1px]',
         !disabled && 'hover:-translate-y-[1px]',
       )}
-      aria-label={`Personaggio ${character.name}${excluded ? ' (escluso)' : ''}`}
+      aria-label={`Personaggio ${character.name}${excluded ? ' (escluso)' : ''}${faceDown ? ' (girata)' : ''}`}
       style={{
         background: colorVar,
         border: `${size === 'lg' ? '4' : '3'}px solid #ffffff`,
@@ -172,12 +170,24 @@ export const CharacterCard = ({
     >
       <motion.div
         initial={false}
-        animate={{ rotateY: faceDown ? 180 : flipReveal ? 360 : 0 }}
-        transition={{ duration: 0.75, ease: 'easeInOut' }}
-        style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}
-        className="relative w-full h-full flex flex-col overflow-hidden"
+        animate={{ rotateY: faceDown ? 180 : 0 }}
+        transition={{ duration: 0.6, ease: 'easeInOut' }}
+        style={{
+          transformStyle: 'preserve-3d',
+          transformOrigin: 'center center',
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+        }}
       >
-        <div className="absolute inset-0 flex flex-col" style={{ backfaceVisibility: 'hidden' }}>
+        <div
+          className="absolute inset-0 flex flex-col overflow-hidden"
+          style={{
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            borderRadius: innerRadius,
+          }}
+        >
           <div className="relative w-full overflow-hidden bg-white" style={{ height: '78%' }}>
             <img
               src={character.image}
@@ -198,10 +208,21 @@ export const CharacterCard = ({
           </div>
         </div>
         <div
-            className="absolute inset-0 overflow-hidden rounded-[5px]"
-            style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
-          >
-            <img src={backImage} alt="" className="w-full h-full object-cover" draggable={false} />
+          className="absolute inset-0 overflow-hidden"
+          style={{
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)',
+            borderRadius: innerRadius,
+            background: colorVar,
+          }}
+        >
+            <img src={backImage} alt="Retro carta" className="w-full h-full object-cover" draggable={false} />
+            <span
+              className="absolute inset-0 mix-blend-multiply"
+              style={{ background: colorVar, opacity: 0.15 }}
+              aria-hidden
+            />
         </div>
       </motion.div>
     </button>
