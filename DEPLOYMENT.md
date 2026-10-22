@@ -1,28 +1,13 @@
-# Deploy su Fly.io con Turso
+# Deploy su Render con Turso
 
-Il deploy usa un unico processo persistente che serve sia Next.js sia Socket.IO
-sulla porta `3000`. Il [Caddyfile](./Caddyfile) resta utile solo per l'ambiente
-locale e non viene usato su Fly.io.
+Il deploy usa un unico Web Service Docker che serve Next.js e Socket.IO
+sulla stessa porta `3000`. I dati persistenti delle board sono conservati su
+Turso; il filesystem del servizio Render resta effimero.
 
-## Prerequisiti
+## Turso
 
-- account Fly.io e `flyctl` autenticato;
-- account Turso e CLI `turso` autenticata;
-- repository GitHub remoto da collegare dopo la preparazione locale.
-
-## Creare e inizializzare Turso
-
-```bash
-turso db create indovina-chi
-turso db show indovina-chi
-turso db tokens create indovina-chi
-turso db shell indovina-chi < scripts/turso-schema.sql
-```
-
-Conservare URL e token come segreti: non inserirli in `.env.example`, Git o
-nell'immagine Docker.
-
-Per migrare le board locali, inclusa la board predefinita:
+La tabella `Board` viene creata usando [scripts/turso-schema.sql](./scripts/turso-schema.sql).
+Per importare le board dal database SQLite locale, imposta temporaneamente:
 
 ```bash
 export TURSO_DATABASE_URL='libsql://...'
@@ -34,35 +19,39 @@ npm run db:turso:migrate-boards
 La migrazione usa gli ID esistenti e fa `upsert`, quindi può essere rieseguita
 senza creare duplicati.
 
-## Deploy Fly.io
+## Render
 
-Il file [fly.toml](./fly.toml) configura una macchina sempre attiva con porta
-HTTP interna `3000`. Il Dockerfile imposta `NEXT_PUBLIC_SOCKET_MODE=same-origin`,
-quindi il browser collega Socket.IO allo stesso dominio pubblico di Next.js.
+Nel dashboard Render crea un **Web Service** collegato al repository GitHub:
 
-```bash
-fly launch --no-deploy
-fly secrets set \
-  DATABASE_URL='file:./db/custom.db' \
-  TURSO_DATABASE_URL='libsql://...' \
-  TURSO_AUTH_TOKEN='...'
-fly deploy
-fly logs
+- branch: `main`;
+- environment: `Docker`;
+- instance type: `Free`;
+- Dockerfile: `Dockerfile`.
+
+Configura queste variabili d'ambiente nel servizio:
+
+```text
+TURSO_DATABASE_URL=libsql://...
+TURSO_AUTH_TOKEN=...
+NODE_ENV=production
 ```
 
-`TURSO_DATABASE_URL` e `TURSO_AUTH_TOKEN` attivano automaticamente l'adapter
-libSQL in [src/lib/db.ts](./src/lib/db.ts). In assenza di questi valori, lo
-sviluppo locale usa SQLite.
+Render usa il comando definito nel Dockerfile:
 
-## GitHub
-
-Il remote GitHub non viene configurato automaticamente. Dopo aver creato il
-repository remoto e fornito il suo URL:
-
-```bash
-git remote add origin <URL_REPOSITORY>
-git push -u origin main
+```dockerfile
+CMD ["npx", "tsx", "server.ts"]
 ```
 
-Successivamente il deploy può essere eseguito manualmente con `fly deploy` o
-automatizzato tramite GitHub Actions usando un `FLY_API_TOKEN` come secret.
+Il servizio Free può andare in sleep dopo un periodo senza traffico; il primo
+accesso successivo può quindi richiedere più tempo. Turso mantiene comunque
+persistenti le board e le immagini.
+
+## Sviluppo locale
+
+In assenza delle variabili Turso, [src/lib/db.ts](./src/lib/db.ts) usa SQLite
+locale tramite `DATABASE_URL`. Per avviare il server persistente:
+
+```bash
+npm run build
+npm start
+```

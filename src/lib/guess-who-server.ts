@@ -1,7 +1,7 @@
 // ============================================================================
 // Guess-Who socket.io server logic — shared module.
 // Used by:
-//   1. `server.ts` — production entrypoint for Fly.io, serving Next.js and
+//   1. `server.ts` — production entrypoint for Render, serving Next.js and
 //      Socket.IO on the same HTTP server.
 //   2. `src/instrumentation.ts` — local fallback on port 3003 when the custom
 //      server is disabled.
