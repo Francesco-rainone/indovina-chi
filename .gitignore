@@ -53,5 +53,6 @@ prompt
 
 server.log
 db/*.db
+Caddyfile
 # Skills directory
 /skills/
