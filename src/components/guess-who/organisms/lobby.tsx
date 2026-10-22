@@ -96,7 +96,7 @@ export const Lobby = () => {
       <Card className="figma-card bg-white border-0 shadow-none">
         <CardHeader className="text-center pb-3">
           <img
-            src="/logo.svg"
+            src="/guess-who-logo.webp"
             alt="Indovina Chi"
             className="mx-auto h-28 sm:h-32 w-auto object-contain drop-shadow-lg"
           />

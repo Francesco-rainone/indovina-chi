@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   keywords: ["indovina chi", "guess who", "gioco online", "multiplayer", "Next.js"],
   authors: [{ name: "Z.ai" }],
   icons: {
-    icon: "/guess-who-logo.webp",
+    icon: "/logo.svg",
   },
   openGraph: {
     title: "Indovina Chi Online",
