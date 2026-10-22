@@ -224,7 +224,7 @@ export const GameBoard = ({ phase }: GameBoardProps) => {
                     ? () => setGuessTarget(c)
                     : undefined
                 }
-                flipReveal={phase === 'ended' && isRevealed}
+                flipReveal={phase === 'ended' && c.id === opponentSecretCharId}
               />
             )
           })}

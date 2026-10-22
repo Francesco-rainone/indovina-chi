@@ -35,9 +35,9 @@ interface CharacterCardProps {
   pickHint?: boolean
   /** show a "right-click / long-press to guess" hint overlay (when it's your turn and the card is guessable) */
   guessable?: boolean
-  /** when true, the card does a 3D flip (rotateY 360°) — used at end-of-round/match to celebrate revealed secrets */
+  /** when true, the card completes a full turn and returns face-up */
   flipReveal?: boolean
-  /** show the player's colored card back instead of the character */
+  /** turn the card face-down and show the player's colored card back */
   showBack?: boolean
   backImage?: string
 }
@@ -167,7 +167,7 @@ export const CharacterCard = ({
       <motion.div
         initial={false}
         animate={{ rotateY: showBack ? 180 : flipReveal ? 360 : 0 }}
-        transition={{ duration: 0.6, ease: 'easeInOut' }}
+        transition={{ duration: 0.75, ease: 'easeInOut' }}
         style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}
         className="relative w-full h-full flex flex-col overflow-hidden"
       >
