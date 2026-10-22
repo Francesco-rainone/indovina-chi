@@ -29,6 +29,7 @@ interface CharacterCardProps {
   wrongGuess?: boolean
   size?: 'sm' | 'md' | 'lg'
   onClick?: () => void
+  onContextMenu?: (e: React.MouseEvent) => void
   /** guess action — triggered by right-click (desktop) OR long-press (mobile, 500ms). The card abstracts the input modality. */
   onGuess?: () => void
   /** show a small "tap me" hint when pickable */
@@ -38,8 +39,7 @@ interface CharacterCardProps {
   /** when true, the card completes a full turn and returns face-up */
   flipReveal?: boolean
   /** turn the card face-down and show the player's colored card back */
-  showBack?: boolean
-  backImage?: string
+  faceDown?: boolean
 }
 
 const sizeMap = {
@@ -62,16 +62,17 @@ export const CharacterCard = ({
   wrongGuess = false,
   size = 'md',
   onClick,
+  onContextMenu,
   onGuess,
   pickHint = false,
   guessable = false,
   flipReveal = false,
-  showBack = false,
-  backImage,
+  faceDown = false,
 }: CharacterCardProps) => {
   const s = sizeMap[size]
   const colorVar = playerColor === 'p1' ? 'var(--color-p1)' : 'var(--color-p2)'
   const inkVar = playerColor === 'p1' ? 'var(--color-p1-ink)' : 'var(--color-p2-ink)'
+  const backImage = playerColor === 'p1' ? '/red-retrocard.jpg' : '/blu-retrocard.jpg'
 
   // ---- Mobile long-press detection (alternative to right-click on touch devices) ----
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -126,9 +127,14 @@ export const CharacterCard = ({
 
   // Desktop right-click → guess
   const handleContextMenu = (e: React.MouseEvent) => {
-    if (!onGuess) return
-    e.preventDefault()
-    onGuess()
+    if (onContextMenu) {
+      onContextMenu(e)
+      return
+    }
+    if (onGuess) {
+      e.preventDefault()
+      onGuess()
+    }
   }
 
   return (
@@ -166,7 +172,7 @@ export const CharacterCard = ({
     >
       <motion.div
         initial={false}
-        animate={{ rotateY: showBack ? 180 : flipReveal ? 360 : 0 }}
+        animate={{ rotateY: faceDown ? 180 : flipReveal ? 360 : 0 }}
         transition={{ duration: 0.75, ease: 'easeInOut' }}
         style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}
         className="relative w-full h-full flex flex-col overflow-hidden"
@@ -191,14 +197,12 @@ export const CharacterCard = ({
             </span>
           </div>
         </div>
-        {backImage && (
-          <div
+        <div
             className="absolute inset-0 overflow-hidden rounded-[5px]"
             style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
           >
             <img src={backImage} alt="" className="w-full h-full object-cover" draggable={false} />
-          </div>
-        )}
+        </div>
       </motion.div>
     </button>
   )
