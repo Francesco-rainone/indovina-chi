@@ -47,6 +47,7 @@ export interface RoomState {
   startingLives: number
   roundsToWin: number
   mySecretPick: string | null
+  opponentSecretPick: string | null
   myLives: number
   myExcluded: string[]
   myExcludedThisTurn: string[]

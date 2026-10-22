@@ -147,12 +147,7 @@ export const GameBoard = ({ phase }: GameBoardProps) => {
     if (ch) revealMap[ch.id] = r.playerName
   }
   const winnerId = room.winner
-  const opponentSecretName = phase === 'ended' && opponent
-    ? reveals.find((reveal) => reveal.playerId === opponent.id)?.content.match(/:\s*(.+)$/)?.[1]?.trim()
-    : undefined
-  const opponentSecretCharId = opponentSecretName
-    ? characters.find((character) => character.name === opponentSecretName)?.id
-    : undefined
+  const opponentSecretCharId = phase === 'ended' ? room.opponentSecretPick : null
 
   const pickable = phase === 'picking' && !iHavePicked
   const startingLives = room.startingLives || 3

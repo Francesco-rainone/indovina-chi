@@ -160,6 +160,10 @@ const buildRoomStatePayload = (room: Room, socketId: string) => {
   return {
     ...base,
     mySecretPick: room.secretPicks[socketId] ?? null,
+    opponentSecretPick:
+      room.phase === 'ended' && opponentRaw
+        ? room.secretPicks[opponentRaw.id] ?? null
+        : null,
     myLives: room.lives[socketId] ?? STARTING_LIVES,
     myExcluded: excludedFor(room, socketId),
     myExcludedThisTurn: excludedThisTurnFor(room, socketId),
