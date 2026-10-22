@@ -147,6 +147,12 @@ export const GameBoard = ({ phase }: GameBoardProps) => {
     if (ch) revealMap[ch.id] = r.playerName
   }
   const winnerId = room.winner
+  const opponentSecretId = phase === 'ended'
+    ? reveals.find((r) => r.playerId !== room.myId)?.content.match(/:\s*(.+)$/)?.[1]?.trim()
+    : null
+  const opponentSecretCharId = opponentSecretId
+    ? characters.find((c) => c.name === opponentSecretId)?.id
+    : null
 
   const pickable = phase === 'picking' && !iHavePicked
   const startingLives = room.startingLives || 3
@@ -201,6 +207,8 @@ export const GameBoard = ({ phase }: GameBoardProps) => {
                 selected={isMySecret}
                 isMySecret={isMySecret}
                 winnerReveal={isWinnerReveal}
+                showBack={phase === 'ended' && c.id !== opponentSecretCharId}
+                backImage={playerColor === 'p1' ? '/red-retrocard.jpg' : '/blu-retrocard.jpg'}
                 pickHint={pickable}
                 guessable={canGuess}
                 disabled={phase === 'ended' || (phase === 'picking' && iHavePicked) || submitting}

@@ -37,6 +37,9 @@ interface CharacterCardProps {
   guessable?: boolean
   /** when true, the card does a 3D flip (rotateY 360°) — used at end-of-round/match to celebrate revealed secrets */
   flipReveal?: boolean
+  /** show the player's colored card back instead of the character */
+  showBack?: boolean
+  backImage?: string
 }
 
 const sizeMap = {
@@ -63,6 +66,8 @@ export const CharacterCard = ({
   pickHint = false,
   guessable = false,
   flipReveal = false,
+  showBack = false,
+  backImage,
 }: CharacterCardProps) => {
   const s = sizeMap[size]
   const colorVar = playerColor === 'p1' ? 'var(--color-p1)' : 'var(--color-p2)'
@@ -161,47 +166,39 @@ export const CharacterCard = ({
     >
       <motion.div
         initial={false}
-        animate={{ rotateY: flipReveal ? 360 : 0 }}
+        animate={{ rotateY: showBack ? 180 : flipReveal ? 360 : 0 }}
         transition={{ duration: 0.6, ease: 'easeInOut' }}
         style={{ transformStyle: 'preserve-3d', transformOrigin: 'center center' }}
         className="relative w-full h-full flex flex-col overflow-hidden"
       >
-        {/* Image area (top ~80%) */}
-        <div className="relative w-full overflow-hidden bg-white" style={{ height: '78%' }}>
-          <img
-            src={character.image}
-            alt={character.name}
-            className={cn('w-full h-full object-cover', excluded && 'opacity-40')}
-            draggable={false}
-          />
-          {/* dark wash when excluded */}
-          {excluded && <span className="absolute inset-0 bg-black/55" aria-hidden />}
-
-          {/* Secret badge (top-left) */}
-          {isMySecret && <SecretBadge inkColor={inkVar} />}
-
-          {/* Selected check (top-right) */}
-          {selected && <SelectedCheck inkColor={inkVar} />}
-
-          {/* Pick hint */}
-          {pickHint && !selected && !isMySecret && !disabled && <PickHint />}
-
-          {/* Guessable hint (right-click / long-press to guess) */}
-          {guessable && !disabled && !excluded && !isMySecret && <GuessableHint />}
+        <div className="absolute inset-0 flex flex-col" style={{ backfaceVisibility: 'hidden' }}>
+          <div className="relative w-full overflow-hidden bg-white" style={{ height: '78%' }}>
+            <img
+              src={character.image}
+              alt={character.name}
+              className={cn('w-full h-full object-cover', excluded && 'opacity-40')}
+              draggable={false}
+            />
+            {excluded && <span className="absolute inset-0 bg-black/55" aria-hidden />}
+            {isMySecret && <SecretBadge inkColor={inkVar} />}
+            {selected && <SelectedCheck inkColor={inkVar} />}
+            {pickHint && !selected && !isMySecret && !disabled && <PickHint />}
+            {guessable && !disabled && !excluded && !isMySecret && <GuessableHint />}
+          </div>
+          <div className="flex-1 flex items-center justify-center px-1" style={{ background: colorVar }}>
+            <span className={cn('font-bold text-center leading-tight line-clamp-2', s.name)} style={{ color: inkVar }}>
+              {character.name}
+            </span>
+          </div>
         </div>
-
-        {/* Name area (bottom ~22%) */}
-        <div
-          className="flex-1 flex items-center justify-center px-1"
-          style={{ background: colorVar }}
-        >
-          <span
-            className={cn('font-bold text-center leading-tight line-clamp-2', s.name)}
-            style={{ color: inkVar }}
+        {backImage && (
+          <div
+            className="absolute inset-0 overflow-hidden rounded-[5px]"
+            style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
           >
-            {character.name}
-          </span>
-        </div>
+            <img src={backImage} alt="" className="w-full h-full object-cover" draggable={false} />
+          </div>
+        )}
       </motion.div>
     </button>
   )
