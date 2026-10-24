@@ -25,6 +25,7 @@ export const BoardBuilder = ({ isHost }: BoardBuilderProps) => {
   const [bulkLoading, setBulkLoading] = useState(false)
   const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0 })
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [boardName, setBoardName] = useState('')
 
   const characters = room?.characters ?? []
 
@@ -100,14 +101,14 @@ export const BoardBuilder = ({ isHost }: BoardBuilderProps) => {
     if (!room.savedBoardId) {
       try {
         // Build a friendly name from the first 3 character names + ellipsis (matches the existing board naming convention).
-        const boardName =
+        const generatedBoardName =
           characters.slice(0, 3).map((c) => c.name).join(', ') +
           (characters.length > 3 ? '…' : '')
         const r = await fetch('/api/boards', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: boardName,
+            name: boardName.trim() || generatedBoardName,
             characters,
             creatorName: me?.name ?? null,
           }),
@@ -195,6 +196,23 @@ export const BoardBuilder = ({ isHost }: BoardBuilderProps) => {
               progress={bulkProgress}
               disabled={characters.length >= MAX_CHARACTERS}
             />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="board-name" className="text-sm font-medium">
+              Nome board <span className="font-normal text-muted-foreground">(opzionale)</span>
+            </label>
+            <input
+              id="board-name"
+              value={boardName}
+              onChange={(event) => setBoardName(event.target.value)}
+              placeholder="es. Famiglia e amici"
+              maxLength={80}
+              className="border-input bg-transparent focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] flex h-9 w-full rounded-md border px-3 py-1 text-base outline-none md:text-sm"
+            />
+            <p className="text-xs text-muted-foreground">
+              Se lo lasci vuoto, potrai rinominare la board dalla lista dopo il salvataggio.
+            </p>
           </div>
 
           <div>

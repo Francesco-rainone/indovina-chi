@@ -76,7 +76,7 @@ export const SavedBoardsTab = ({
         toast.error('Questa board ha troppi pochi personaggi')
         return
       }
-      const res = await emitAck(socket, 'create-room-with-board', { name: playerName, characters, useLives, roundMode, savedBoardId: b.id })
+      const res = await emitAck<{ code?: string }>(socket, 'create-room-with-board', { name: playerName, characters, useLives, roundMode, savedBoardId: b.id })
       if (!res.ok) {
         toast.error(res.error || 'Errore creazione stanza')
         onError(res.error || null)
@@ -104,6 +104,28 @@ export const SavedBoardsTab = ({
     } catch {
       setBoards(before)
       toast.error('Errore eliminazione')
+    }
+  }
+
+  const renameBoard = async (id: string, name: string) => {
+    const trimmedName = name.trim()
+    const previous = boards
+    setBoards((current) => current.map((board) => board.id === id ? { ...board, name: trimmedName } : board))
+    try {
+      const r = await fetch(`/api/boards/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: trimmedName }),
+      })
+      if (!r.ok) {
+        const data = await r.json().catch(() => null)
+        throw new Error(data?.error || 'Rinomina fallita')
+      }
+      toast.success('Board rinominata')
+    } catch (e) {
+      setBoards(previous)
+      toast.error((e as Error).message || 'Errore rinomina')
+      throw e
     }
   }
 
@@ -167,6 +189,7 @@ export const SavedBoardsTab = ({
               disabled={!connected || using !== null}
               onUse={startWithBoard}
               onDelete={deleteBoard}
+              onRename={renameBoard}
             />
           ))}
         </div>
